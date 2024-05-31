@@ -1,27 +1,20 @@
 FROM debian:11
 
-RUN apt update -y && apt upgrade -y 
+RUN apt update -y && apt install -y php php-fpm php-mysql curl
 
-RUN apt install -y wget curl 
 
-RUN apt-get install -y php7.3\
-    php-fpm\
-    php-mysql\
-    mariadb-client\
-    unzip\
-    zsh\
-    git\ 
-    mariadb-server
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
-RUN apt install -y mariadb-server
+RUN chmod +x wp-cli.phar &&\
+mv wp-cli.phar /usr/local/bin/wp
 
-RUN yes | sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+COPY tools/creat.sh /
 
-RUN zsh
+RUN chmod +x creat.sh
 
-# RUN wget https://wordpress.org/latest.zip -P /var/www
+RUN  mkdir -p /run/php\
+&& chown www-data:www-data /run/php\
+&& chmod 755 /run/php
 
-# RUN cd /var/www && unzip latest.zip && rm latest.zip
 
-# RUN		chown -R root:root /var/www/wordpress
-CMD [ "bash" ]
+CMD ["./creat.sh"]
