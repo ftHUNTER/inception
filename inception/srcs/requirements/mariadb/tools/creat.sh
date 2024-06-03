@@ -3,12 +3,11 @@
 service mariadb start
 
 
-mysql -u root -p --skip-password <<EOF
-CREATE DATABASE redaDb;
-CREATE USER 'new_user'@'localhost' IDENTIFIED BY 'new_password';
-GRANT ALL PRIVILEGES ON redaDb.* TO 'new_user'@'localhost';
-FLUSH PRIVILEGES;
-EOF
+mariadb -u root -e " 
+CREATE DATABASE IF NOT EXISTS $SQL_DATABASE;
+CREATE USER '$SQL_USER' IDENTIFIED BY '$SQL_PASSWORD';
+GRANT ALL PRIVILEGES ON $SQL_DATABASE.* TO '$SQL_USER';
+FLUSH PRIVILEGES;"
 
 service mariadb stop
 

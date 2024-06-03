@@ -1,42 +1,51 @@
-version: '3.8'
-
 services:
   wordpress:
-    image: wp
+    image: wordpress
+    container_name: wordpress_container
     depends_on:
-      - md
-    # restart: always
+      - mariadb
+    restart: always
     build: requirements/wordpress/.
+    env_file:
+      - .env
     volumes:
-      - wp_data:/var/www/html
-    environment:
-      WORDPRESS_DB_USER: new_user
-      WORDPRESS_DB_PASSWORD: new_password
-      WORDPRESS_DB_HOST: md:3306
+      - wordpress-data:/var/www/html
+    networks:
+      - my-net
 
-  md:
-    image: md
-    # restart: always
+  mariadb:
+    image: mariadb
+    restart: always
+    container_name: mariadb_container
     build: requirements/mariadb/.
+    env_file:
+      - .env
     volumes:
-      - db_data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: "123" 
-      MYSQL_DATABASE: redaDb
-      MYSQL_USER: new_user
-      MYSQL_PASSWORD: new_password
+      - database:/var/lib/mysql
+    networks:
+      - my-net
     
   nginx:
-    image: ng
-    # restart: always
+    image: nginx
+    restart: always
+    container_name: nginx_container
     build: requirements/nginx/.
+    env_file:
+      - .env
     volumes:
-      - wp_data:/var/www/html
+      - wordpress-data:/var/www/html
+    networks:
+      - my-net
     ports:
       - "443:443"
     depends_on:
       - wordpress
 
+networks:
+  my-net:
+    name: my-net
+    driver: bridge
+
 volumes:
-  wp_data:
-  db_data:
+  database:
+  wordpress-data:
