@@ -8,4 +8,4 @@ COPY ./tools/creat.sh /
 
 RUN chmod +x creat.sh
 
-CMD ["./creat.sh"]
+ENTRYPOINT ["./creat.sh"]

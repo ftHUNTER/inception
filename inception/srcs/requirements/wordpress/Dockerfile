@@ -17,4 +17,4 @@ RUN  mkdir -p /run/php\
 && chmod 755 /run/php
 
 
-CMD ["./creat.sh"]
+ENTRYPOINT ["./creat.sh"]

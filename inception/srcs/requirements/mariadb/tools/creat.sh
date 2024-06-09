@@ -11,4 +11,4 @@ FLUSH PRIVILEGES;"
 
 service mariadb stop
 
-mysqld_safe
+exec mariadbd
